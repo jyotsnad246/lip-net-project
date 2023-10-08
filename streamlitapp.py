@@ -3,8 +3,8 @@ import os
 from io import BytesIO
 import imageio
 import tensorflow as tf
-from utils import load_data, num_to_char
-from modelutil import load_model
+from app.utils import load_data, num_to_char
+from app.modelutil import load_model
 from PIL import Image
 import base64
 
@@ -76,8 +76,8 @@ col1, col2 = st.columns(2)
 if options:
     with col1:
         st.markdown("<h6 style='text-align: center; color: #000000;'>Selected Video</h6>", unsafe_allow_html=True)
-        file_path = os.path.join('data', 's1', selected_video)
-        os.system(f'ffmpeg -i {file_path} -vcodec libx264 test_video.mp4 -y')  
+        #file_path = os.path.join('data', 's1', selected_video)
+        os.system(f'ffmpeg -i {selected_video} -vcodec libx264 test_video.mp4 -y')  
 
         # Rendering Video
         video = open('test_video.mp4', 'rb')
@@ -88,7 +88,8 @@ if options:
         st.markdown("<h6 style='text-align: center; color: #000000;'>What Sheldon sees</h6>", unsafe_allow_html=True)
 
         # Loading Video
-        video, annotations = load_data(tf.convert_to_tensor(file_path))
+        #file_path = os.path('data','alignments/s1', selected_video)
+        video, annotations = load_data(tf.convert_to_tensor(selected_video))#file_path))
         video = tf.squeeze(video, axis=-1)
         video_np = (video.numpy() * 255).astype('uint8')
         imageio.mimsave('animation.gif', video_np, duration=50)
